@@ -191,6 +191,10 @@ export default function SettingsPage() {
           </div>
         </section>
 
+        {/* AI Test Lab - Live Preview */}
+        <AITestLab userId={user?.uid} />
+
+
         {/* Notifications */}
         <section>
           <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 px-1">System</h2>
@@ -223,6 +227,104 @@ export default function SettingsPage() {
         </section>
       </div>
     </div>
+  );
+}
+
+import { useMoodDetection } from '@/components/chat/useMoodDetection';
+import { Activity, Brain, Heart, MessageCircle } from 'lucide-react';
+
+function AITestLab({ userId }: { userId?: string }) {
+  const { mood, videoRef, isListening, isCameraEnabled, toggleCamera } = useMoodDetection(false, userId);
+  
+  const getMoodColor = (m: number) => {
+    if (m === 0) return 'text-teal-500';
+    if (m === 1) return 'text-amber-500';
+    return 'text-red-500';
+  };
+
+  const getMoodLabel = (m: number) => {
+    if (m === 0) return 'Calm';
+    if (m === 1) return 'Mildly Distressed';
+    return 'Highly Distressed';
+  };
+
+  return (
+    <section>
+      <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 px-1">AI Test Lab</h2>
+      <div className="bg-white rounded-[32px] p-6 shadow-sm border border-gray-50 space-y-6">
+        {/* Camera Preview */}
+        <div className="relative aspect-video bg-gray-900 rounded-2xl overflow-hidden shadow-inner border-4 border-gray-100">
+          <video 
+            ref={videoRef} 
+            className={clsx(
+              "w-full h-full object-cover transition-opacity duration-1000",
+              isCameraEnabled ? "opacity-100" : "opacity-0"
+            )}
+            autoPlay 
+            playsInline 
+            muted 
+          />
+          {!isCameraEnabled && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500">
+              <Camera size={40} className="mb-2 opacity-20" />
+              <p className="text-xs font-bold uppercase tracking-wider">Camera Disabled</p>
+            </div>
+          )}
+          
+          {/* Listening Overlay */}
+          <AnimatePresence>
+            {isListening && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute top-4 right-4 flex items-center gap-2 bg-brand-primary/90 text-white px-3 py-1.5 rounded-full backdrop-blur-md"
+              >
+                <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Analysing...</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Real-time Data Grid */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-gray-50 p-4 rounded-2xl">
+            <div className="flex items-center gap-2 mb-1 opacity-50">
+              <Brain size={14} />
+              <span className="text-[10px] font-black uppercase tracking-widest">Global Mood</span>
+            </div>
+            <p className={clsx("text-lg font-black tracking-tight", getMoodColor(mood))}>
+              {getMoodLabel(mood)}
+            </p>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-2xl">
+            <div className="flex items-center gap-2 mb-1 opacity-50">
+              <Activity size={14} />
+              <span className="text-[10px] font-black uppercase tracking-widest">Status</span>
+            </div>
+            <p className="text-lg font-black tracking-tight text-gray-900">
+              {isListening ? 'Active' : 'Idle'}
+            </p>
+          </div>
+        </div>
+
+        {/* Action Button */}
+        <button 
+          onClick={toggleCamera}
+          className={clsx(
+            "w-full py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all",
+            isCameraEnabled ? "bg-gray-100 text-gray-600" : "bg-brand-primary text-white shadow-xl shadow-brand-primary/20"
+          )}
+        >
+          {isCameraEnabled ? 'Pause Camera Test' : 'Start Camera Test'}
+        </button>
+        
+        <p className="text-[11px] text-gray-400 text-center font-medium leading-relaxed px-4">
+          Verification: Smile or look sad to see the Global Mood shift. Text detection is also active during chat sessions.
+        </p>
+      </div>
+    </section>
   );
 }
 

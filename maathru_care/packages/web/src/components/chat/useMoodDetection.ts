@@ -15,6 +15,7 @@ const scoreSentiment = (text: string): number => {
     'cry','crying','alone','lonely','help','bad','terrible','awful','depressed',
     'angry','mad','frustrated','disappointed','disapointed','annoyed','upset',
     'nausea','vomit','bleed','bleeding','cramp','cramping','dizzy','faint',
+    'die','killing','kill','death','stress','stressed','stresses','suicide',
     'duka','dukai','wedanawa','bhayai','ape','thani','danna','awl',
     'thenikma','karadare','nathuwa','harima','kanda','wiyadma',
     'amarui','ridenawa','baya','kammali','epawela','tharahai','kenthi'
@@ -226,17 +227,13 @@ export const useMoodDetection = (isTyping: boolean, userId?: string, onMoodCaptu
       }).catch(err => console.error('Failed to save mood history:', err));
     }
 
-    // HIGH PRIORITY SYNC: If we detect level 2, update everything immediately
-    if (final >= 2) {
+    // REAL-TIME SYNC: Update the global mood whenever the face analysis changes
+    if (final >= 2 || (isCameraEnabled && faceMood >= 2)) {
       setMood(2);
+    } else if (final >= 1 || (isCameraEnabled && faceMood >= 1)) {
+      setMood(1);
     } else {
-      setMood(prev => {
-        const updated = [...moodHistory.slice(-4), final];
-        const highCount = updated.filter(m => m >= 1).length; // Look for any distress
-        if (highCount >= 3) return 1; // Accumulate mild
-        if (updated.filter(m => m >= 2).length >= 1) return 2; // Instant override for strong
-        return final;
-      });
+      setMood(0);
     }
 
     setMoodHistory(prev => [...prev.slice(-4), final]);
@@ -244,7 +241,7 @@ export const useMoodDetection = (isTyping: boolean, userId?: string, onMoodCaptu
     messagesSent.current += 1;
 
     return final;
-  }, [faceMood, moodHistory, isCameraEnabled, userId]);
+  }, [faceMood, isCameraEnabled, userId]);
 
   const updateLastBotMessageTime = useCallback(() => {
     lastBotMessageTime.current = Date.now();
