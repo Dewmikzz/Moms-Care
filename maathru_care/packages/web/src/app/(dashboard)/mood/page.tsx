@@ -32,36 +32,22 @@ export default function MoodPage() {
     const fetchMoodData = async () => {
       if (!user) return;
       try {
-        const last7Days = await db.moodHistory
+        let recentEntries = await db.moodHistory
           .where('userId').equals(user.uid)
-          .filter(entry => entry.timestamp > subDays(new Date(), 7).getTime())
-          .toArray();
-
-        // Group by day and calculate average mood score
-        const grouped: Record<string, { total: number, count: number }> = {};
+          .sortBy('timestamp');
         
-        // Initialize with last 7 days
-        for (let i = 6; i >= 0; i--) {
-          const d = format(subDays(new Date(), i), 'EEE');
-          grouped[d] = { total: 0, count: 0 };
-        }
+        recentEntries = recentEntries.slice(-20); // Get last 20 real-time updates
 
-        last7Days.forEach(entry => {
-          const day = format(entry.timestamp, 'EEE');
-          if (grouped[day]) {
-            // Map 0 (Calm) -> 100, 1 (Mild) -> 50, 2 (Distressed) -> 10
+        if (recentEntries.length === 0) {
+          setMoodData([]);
+        } else {
+          const formatted = recentEntries.map((entry: any) => {
+            const time = format(entry.timestamp, 'HH:mm');
             const positivity = entry.mood === 0 ? 100 : entry.mood === 1 ? 50 : 10;
-            grouped[day].total += positivity;
-            grouped[day].count += 1;
-          }
-        });
-
-        const formatted = Object.entries(grouped).map(([day, val]) => ({
-          day,
-          score: val.count > 0 ? Math.round(val.total / val.count) : (60 + Math.random() * 20)
-        }));
-
-        setMoodData(formatted);
+            return { time, score: positivity };
+          });
+          setMoodData(formatted);
+        }
       } catch (err) {
         console.error('Failed to fetch reports data', err);
       } finally {
@@ -73,13 +59,13 @@ export default function MoodPage() {
   }, [user]);
 
 const ACTIVITY_DATA = [
-  { day: 'Mon', steps: 4000, water: 6, sleep: 7 },
-  { day: 'Tue', steps: 3000, water: 5, sleep: 6 },
-  { day: 'Wed', steps: 6000, water: 8, sleep: 8 },
-  { day: 'Thu', steps: 2000, water: 4, sleep: 5 },
-  { day: 'Fri', steps: 5000, water: 7, sleep: 7 },
-  { day: 'Sat', steps: 7000, water: 9, sleep: 9 },
-  { day: 'Sun', steps: 4500, water: 7, sleep: 8 },
+  { day: 'Mon', steps: 0, water: 0, sleep: 0 },
+  { day: 'Tue', steps: 0, water: 0, sleep: 0 },
+  { day: 'Wed', steps: 0, water: 0, sleep: 0 },
+  { day: 'Thu', steps: 0, water: 0, sleep: 0 },
+  { day: 'Fri', steps: 0, water: 0, sleep: 0 },
+  { day: 'Sat', steps: 0, water: 0, sleep: 0 },
+  { day: 'Sun', steps: 0, water: 0, sleep: 0 },
 ];
 
   return (
@@ -113,16 +99,16 @@ const ACTIVITY_DATA = [
           </div>
           
           <div className="grid grid-cols-3 gap-4">
-            <StatBox label="Mood" value="Happy" color="text-teal-600" bg="bg-teal-50" />
-            <StatBox label="Activity" value="85%" color="text-brand-primary" bg="bg-brand-primary/10" />
-            <StatBox label="Sleep" value="7.5h" color="text-purple-600" bg="bg-purple-50" />
+            <StatBox label="Mood" value={moodData.length > 0 ? (moodData[moodData.length - 1].score > 50 ? "Good" : "Stressed") : "--"} color="text-teal-600" bg="bg-teal-50" />
+            <StatBox label="Activity" value="0%" color="text-brand-primary" bg="bg-brand-primary/10" />
+            <StatBox label="Sleep" value="0h" color="text-purple-600" bg="bg-purple-50" />
           </div>
         </div>
 
         {/* Mood Analysis Chart */}
         <section>
           <div className="flex items-center justify-between mb-4 px-1">
-            <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest">Mood Trends</h2>
+            <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest">Real-time Mood Trends</h2>
             <div className="flex items-center gap-1 text-[11px] font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded-md">
               <TrendingUp size={12} /> Positive
             </div>
@@ -137,7 +123,7 @@ const ACTIVITY_DATA = [
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#9ca3af'}} dy={10} />
+                <XAxis dataKey="time" axisLine={false} tickLine={false} tick={{fontSize: 12, fill: '#9ca3af'}} dy={10} />
                 <Tooltip />
                 <Area type="monotone" dataKey="score" stroke="#2dd4bf" strokeWidth={3} fillOpacity={1} fill="url(#colorScore)" />
               </AreaChart>

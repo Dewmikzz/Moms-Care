@@ -58,7 +58,7 @@ export default function ReportsPage() {
 
         const formatted = Object.entries(grouped).map(([day, val]) => ({
           day,
-          score: val.count > 0 ? Math.round(val.total / val.count) : 80 // Default to 80 for display
+          score: val.count > 0 ? Math.round(val.total / val.count) : 0 // Default to 0 for display
         }));
 
         setMoodData(formatted);
@@ -73,13 +73,13 @@ export default function ReportsPage() {
   }, [user]);
 
 const ACTIVITY_DATA = [
-  { day: 'Mon', steps: 4000, water: 6, sleep: 7 },
-  { day: 'Tue', steps: 3000, water: 5, sleep: 6 },
-  { day: 'Wed', steps: 6000, water: 8, sleep: 8 },
-  { day: 'Thu', steps: 2000, water: 4, sleep: 5 },
-  { day: 'Fri', steps: 5000, water: 7, sleep: 7 },
-  { day: 'Sat', steps: 7000, water: 9, sleep: 9 },
-  { day: 'Sun', steps: 4500, water: 7, sleep: 8 },
+  { day: 'Mon', steps: 0, water: 0, sleep: 0 },
+  { day: 'Tue', steps: 0, water: 0, sleep: 0 },
+  { day: 'Wed', steps: 0, water: 0, sleep: 0 },
+  { day: 'Thu', steps: 0, water: 0, sleep: 0 },
+  { day: 'Fri', steps: 0, water: 0, sleep: 0 },
+  { day: 'Sat', steps: 0, water: 0, sleep: 0 },
+  { day: 'Sun', steps: 0, water: 0, sleep: 0 },
 ];
 
   return (
@@ -113,9 +113,9 @@ const ACTIVITY_DATA = [
           </div>
           
           <div className="grid grid-cols-3 gap-4">
-            <StatBox label="Mood" value="Happy" color="text-teal-600" bg="bg-teal-50" />
-            <StatBox label="Activity" value="85%" color="text-brand-primary" bg="bg-brand-primary/10" />
-            <StatBox label="Sleep" value="7.5h" color="text-purple-600" bg="bg-purple-50" />
+            <StatBox label="Mood" value="--" color="text-teal-600" bg="bg-teal-50" />
+            <StatBox label="Activity" value="0%" color="text-brand-primary" bg="bg-brand-primary/10" />
+            <StatBox label="Sleep" value="0h" color="text-purple-600" bg="bg-purple-50" />
           </div>
         </div>
 

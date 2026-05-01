@@ -153,27 +153,27 @@ export default function HomePage() {
           <div className="relative z-10">
             <div className="flex items-center gap-2 mb-8">
                <div className="px-4 py-1.5 bg-white/20 rounded-full text-[11px] font-black uppercase tracking-wider backdrop-blur-md border border-white/20">
-                 Week 24 Journey
+                 Week 1 Journey
                </div>
             </div>
             
             <div className="flex justify-between items-end">
               <div>
                 <div className="flex items-baseline gap-2">
-                  <h2 className="text-[72px] font-black tracking-tighter leading-none">24</h2>
-                  <span className="text-2xl font-bold opacity-90">Weeks</span>
+                  <h2 className="text-[72px] font-black tracking-tighter leading-none">1</h2>
+                  <span className="text-2xl font-bold opacity-90">Week</span>
                 </div>
                 <p className="text-white/90 font-bold mt-4 text-[16px] flex items-center gap-2">
                    <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
-                   3 days until next milestone
+                   Starting your journey
                 </p>
               </div>
               
               <div className="text-right">
                  <div className="w-20 h-20 bg-white/30 rounded-[32px] backdrop-blur-md border border-white/30 flex items-center justify-center text-4xl mb-3 shadow-inner">
-                   🌽
+                   🌱
                  </div>
-                 <p className="text-[10px] font-black uppercase tracking-widest opacity-80">Size: Corn</p>
+                 <p className="text-[10px] font-black uppercase tracking-widest opacity-80">Size: Seed</p>
               </div>
             </div>
           </div>
@@ -262,9 +262,9 @@ export default function HomePage() {
           </div>
         </div>
         <div className="bg-white/40 backdrop-blur-md rounded-[48px] p-10 shadow-sm border border-white/60 flex justify-between items-center">
-          <RingChart value={3} max={8} color="#3B82F6" icon={Droplets} unit="/8 Cups" />
-          <RingChart value={6} max={8} color="#A855F7" icon={Moon} unit="/8 hrs" />
-          <RingChart value={3.5} max={8} color="#F97316" icon={Footprints} unit="k/8k Steps" />
+          <RingChart value={0} max={8} color="#3B82F6" icon={Droplets} unit="/8 Cups" />
+          <RingChart value={0} max={8} color="#A855F7" icon={Moon} unit="/8 hrs" />
+          <RingChart value={0} max={8} color="#F97316" icon={Footprints} unit="k/8k Steps" />
         </div>
       </div>
 
