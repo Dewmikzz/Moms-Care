@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    @apply h-full w-full bg-bg-primary text-brand-textPrimary overflow-hidden;
+    /* Prevent overscroll bounce on mobile to feel more like a native app */
+    overscroll-behavior-y: none;
+  }
+}
+
+/* Hide scrollbar for a cleaner mobile app look */
+::-webkit-scrollbar {
+  display: none;
+}
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Custom utility for the typing dot bounce delay */
+.animation-delay-200 {
+  animation-delay: 200ms;
+}
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
