@@ -34,6 +34,8 @@ export const metadata: Metadata = {
   formatDetection: { telephone: false },
 };
 
+import { LoadingScreen } from '@/components/shared/LoadingScreen';
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -45,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="msapplication-tap-highlight" content="no" />
       </head>
       <body className={`${nunito.variable} ${notoSansSinhala.variable} font-sans bg-bg-primary text-brand-textPrimary antialiased`}>
+        <LoadingScreen />
         {children}
       </body>
     </html>
