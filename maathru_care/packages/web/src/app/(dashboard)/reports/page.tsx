@@ -34,7 +34,7 @@ export default function ReportsPage() {
       try {
         const last7Days = await db.moodHistory
           .where('userId').equals(user.uid)
-          .where('timestamp').above(subDays(new Date(), 7).getTime())
+          .filter(entry => entry.timestamp > subDays(new Date(), 7).getTime())
           .toArray();
 
         // Group by day and calculate average mood score
