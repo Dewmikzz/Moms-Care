@@ -19,6 +19,7 @@ export const LoadingScreen = () => {
     <AnimatePresence>
       {isVisible && (
         <motion.div
+          key="loader"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
