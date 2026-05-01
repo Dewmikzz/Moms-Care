@@ -130,16 +130,35 @@ export const useMoodDetection = (isTyping: boolean, userId?: string, onMoodCaptu
           setFaceMood(fm);
           onMoodCaptured?.(fm);
 
-          // Save to persistent notifications
+          // Generate a Caring Reminder
+          const getReminder = (m: number) => {
+            if (m === 0) return "You're doing great! Keep that positive energy, Mom. 🌸";
+            if (m === 1) return "Feeling a bit tense? Take a deep breath and a sip of water. 💧";
+            return "MiaKalifa is worried about you. Let's take a 5-minute rest. 🧘‍♀️";
+          };
+
+          const reminder = getReminder(fm);
+
+          // 1. Save to persistent UI notifications
           if (userId) {
             await db.notifications.add({
               userId,
-              title: 'MiaKalifa Analysis',
-              description: `Mood captured: ${fm === 0 ? 'Calm' : fm === 1 ? 'Mild' : 'Distressed'}`,
+              title: 'MiaKalifa Reminder',
+              description: reminder,
               type: 'mood',
               timestamp: Date.now(),
               isRead: false
             });
+          }
+
+          // 2. Trigger Native Browser Notification if permitted
+          if (Notification.permission === 'granted') {
+            new Notification('Maathru Care Reminder', {
+              body: reminder,
+              icon: '/icons/icon-192x192.png'
+            });
+          } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission();
           }
 
           setTimeout(() => setIsListening(false), 2000);
