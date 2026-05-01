@@ -105,19 +105,19 @@ export default function HomePage() {
       </div>
 
       {/* Top Bar */}
-      <div className="px-5 pt-12 pb-4 flex items-center justify-between sticky top-0 bg-white/40 backdrop-blur-xl z-20 border-b border-white/20">
-        <button onClick={toggleSidebar} className="p-2 -ml-2 text-gray-800 hover:bg-white/60 rounded-full transition-colors">
-          <Menu size={24} strokeWidth={2.5} />
+      <div className="px-5 pt-6 pb-3 flex items-center justify-between sticky top-0 bg-white/60 backdrop-blur-2xl z-20 border-b border-white/20 shadow-sm">
+        <button onClick={toggleSidebar} className="p-2 -ml-2 text-gray-800 hover:bg-white/80 rounded-full transition-colors">
+          <Menu size={22} strokeWidth={2.5} />
         </button>
         <div className="flex items-center gap-3">
           <button 
             onClick={() => setIsNotifOpen(true)}
             className="p-2 text-brand-primary bg-white shadow-sm rounded-full border border-gray-100 relative"
           >
-            <Bell size={20} strokeWidth={2.5} />
+            <Bell size={18} strokeWidth={2.5} />
             <div className="absolute top-1 right-1 w-2 h-2 bg-brand-primary rounded-full border border-white" />
           </button>
-          <div className="w-10 h-10 rounded-full bg-brand-primary border-2 border-white shadow-md overflow-hidden relative">
+          <div className="w-9 h-9 rounded-full bg-brand-primary border-2 border-white shadow-md overflow-hidden relative">
             {user?.photoURL ? (
                 <Image src={user.photoURL} alt="User" fill className="object-cover" />
               ) : (
@@ -127,18 +127,18 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className="px-6 pb-24 relative z-10">
+      <div className="px-6 pb-20 relative z-10">
         {/* Greeting Section with Icon */}
-        <div className="mt-8 mb-8 flex items-end justify-between">
+        <div className="mt-6 mb-6 flex items-end justify-between">
           <div>
-            <p className="text-brand-primary font-bold text-xs uppercase tracking-[0.2em] mb-2">Morning, Beautiful</p>
-            <h1 className="text-[34px] font-black text-gray-900 tracking-tight leading-none">
+            <p className="text-brand-primary font-bold text-[10px] uppercase tracking-[0.2em] mb-1.5 opacity-70">Morning, Beautiful</p>
+            <h1 className="text-[30px] font-black text-gray-900 tracking-tight leading-none">
               Hello, {firstName} 🌸
             </h1>
           </div>
           <motion.div 
             whileHover={{ scale: 1.1, rotate: 10 }}
-            className="w-16 h-16 bg-white rounded-3xl shadow-soft border border-white flex items-center justify-center text-4xl"
+            className="w-14 h-14 bg-white rounded-2xl shadow-soft border border-white flex items-center justify-center text-3xl"
           >
             👶
           </motion.div>
@@ -268,17 +268,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Floating Action Button */}
-      <div className="absolute bottom-8 right-8 z-20">
-        <motion.button 
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => router.push('/chat')}
-          className="w-16 h-16 bg-brand-primary shadow-2xl shadow-brand-primary/40 rounded-full flex items-center justify-center text-white border-4 border-white"
-        >
-          <MessageSquare size={26} strokeWidth={2.5} />
-        </motion.button>
-      </div>
     </div>
   );
 }

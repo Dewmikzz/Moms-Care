@@ -152,8 +152,48 @@ export const ChatInterface: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Messages area */}
+      {/* Messages area with Premium Background */}
       <main ref={scrollRef} className="flex-1 overflow-y-auto relative z-0">
+        {/* Animated Mesh Gradient Background */}
+        <div className="absolute inset-0 z-[-1] overflow-hidden bg-[#FFFDFB]">
+          <motion.div 
+            animate={{ 
+              scale: [1, 1.2, 1],
+              rotate: [0, 90, 0],
+              x: [0, 50, 0]
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+            className="absolute -top-1/4 -left-1/4 w-[100%] h-[100%] bg-brand-primary/5 rounded-full blur-[120px]"
+          />
+          <motion.div 
+            animate={{ 
+              scale: [1.2, 1, 1.2],
+              rotate: [0, -90, 0],
+              x: [0, -50, 0]
+            }}
+            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+            className="absolute top-1/4 -right-1/4 w-[100%] h-[100%] bg-[#FFE4E1]/40 rounded-full blur-[120px]"
+          />
+          
+          {/* Subtle Floating Hearts/Bubbles */}
+          {[...Array(6)].map((_, i) => (
+            <motion.div
+              key={i}
+              initial={{ y: '100vh', x: Math.random() * 100 + '%' }}
+              animate={{ y: '-20vh' }}
+              transition={{ 
+                duration: 15 + Math.random() * 10, 
+                repeat: Infinity, 
+                ease: "linear",
+                delay: i * 2
+              }}
+              className="absolute text-brand-primary/10 select-none pointer-events-none"
+              style={{ fontSize: 20 + Math.random() * 30 + 'px' }}
+            >
+              ❤️
+            </motion.div>
+          ))}
+        </div>
         <AnimatePresence>
           {isLoading ? (
             <motion.div 
