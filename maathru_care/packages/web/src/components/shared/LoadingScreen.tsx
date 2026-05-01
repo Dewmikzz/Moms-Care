@@ -16,10 +16,10 @@ export const LoadingScreen = () => {
   }, []);
 
   return (
-    <AnimatePresence>
-      {isVisible && (
+    <AnimatePresence mode="wait">
+      {isVisible ? (
         <motion.div
-          key="loader"
+          key="loader-screen"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
@@ -30,14 +30,14 @@ export const LoadingScreen = () => {
             {/* Pulsing Outer Rings */}
             <motion.div 
               animate={{ 
-                scale: [1, 1.5, 1],
+                scale: [1, 1.2, 1],
                 opacity: [0.3, 0.1, 0.3]
               }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               className="absolute inset-0 bg-brand-primary/20 rounded-full blur-2xl"
             />
             
-            {/* Mother and Child Silhouette Icon */}
+            {/* Silhouette Icon */}
             <motion.div 
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -68,7 +68,7 @@ export const LoadingScreen = () => {
               className="text-2xl font-black text-gray-900 tracking-tight"
             >
               Maathru <span className="text-brand-primary">Care</span>
-            </h1>
+            </motion.h1>
             <motion.p 
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.5 }}
@@ -89,7 +89,7 @@ export const LoadingScreen = () => {
             />
           </div>
         </motion.div>
-      )}
+      ) : null}
     </AnimatePresence>
   );
 };
