@@ -252,10 +252,10 @@ export default function LoginPage() {
 
         {/* Footer Attribution */}
         <div className="absolute bottom-6 left-0 w-full text-center z-30 pointer-events-none">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-800 drop-shadow-sm">
             System Under Development
           </p>
-          <p className="text-[11px] font-bold text-gray-400 mt-1">
+          <p className="text-[11px] font-bold text-slate-700 mt-1 drop-shadow-sm">
             Copyright &copy; {new Date().getFullYear()} Salila Livera
           </p>
         </div>
