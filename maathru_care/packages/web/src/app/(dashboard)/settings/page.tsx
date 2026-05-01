@@ -9,10 +9,12 @@ import { updateProfile } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { clsx } from 'clsx';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export default function SettingsPage() {
   const { toggleSidebar } = useSidebar();
   const { user } = useAuth();
+  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [displayName, setDisplayName] = useState(user?.displayName || '');
