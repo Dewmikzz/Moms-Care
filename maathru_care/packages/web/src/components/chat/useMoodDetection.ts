@@ -132,7 +132,7 @@ export const useMoodDetection = (isTyping: boolean, userId?: string, onMoodCaptu
 
           // Save to persistent notifications
           if (userId) {
-            db.notifications.add({
+            await db.notifications.add({
               userId,
               title: 'MiaKalifa Analysis',
               description: `Mood captured: ${fm === 0 ? 'Calm' : fm === 1 ? 'Mild' : 'Distressed'}`,

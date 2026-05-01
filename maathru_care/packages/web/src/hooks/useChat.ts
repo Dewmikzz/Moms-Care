@@ -60,7 +60,7 @@ export const useChat = (initialLanguage: 'si' | 'en' = 'en') => {
       userId: user?.uid
     };
     const id = await db.messages.add(newMessage);
-    newMessage.id = id;
+    newMessage.id = id as number;
     setMessages(prev => [...prev, newMessage]);
     return newMessage;
   };
