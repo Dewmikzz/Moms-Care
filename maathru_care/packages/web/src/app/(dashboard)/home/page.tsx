@@ -7,6 +7,7 @@ import { Menu, UserCircle, Bell, PenSquare, Droplets, Moon, Footprints, MessageS
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { clsx } from 'clsx';
 
 const RingChart = ({ value, max, color, icon: Icon, unit }: any) => {
   const radius = 28;
@@ -41,6 +42,7 @@ const RingChart = ({ value, max, color, icon: Icon, unit }: any) => {
 };
 
 import { NotificationCenter } from '@/components/shared/NotificationCenter';
+import { useMoodDetection } from '@/components/chat/useMoodDetection';
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -48,11 +50,28 @@ export default function HomePage() {
   const router = useRouter();
   const [isNotifOpen, setIsNotifOpen] = React.useState(false);
 
+  // Initialize Real-time AI Monitoring
+  const { mood, videoRef, isListening, isCameraEnabled } = useMoodDetection(false, user?.uid);
+
   const firstName = user?.displayName?.split(' ')[0] || 'Mom';
+
+  const getMoodStatus = (m: number) => {
+    switch(m) {
+      case 0: return { label: 'Feeling Calm', sub: 'Emotional signals are stable' };
+      case 1: return { label: 'Mildly Distressed', sub: 'Take a deep breath, Mom' };
+      case 2: return { label: 'Highly Distressed', sub: 'MiaKalifa is here for you' };
+      default: return { label: 'Analyzing...', sub: 'Syncing with sensors' };
+    }
+  };
+
+  const status = getMoodStatus(mood);
 
   return (
     <div className="flex-1 flex flex-col bg-[#FFFDFB] h-full overflow-y-auto relative">
       <NotificationCenter isOpen={isNotifOpen} onClose={() => setIsNotifOpen(false)} />
+      
+      {/* Hidden AI Sensor */}
+      <video ref={videoRef} className="hidden" aria-hidden="true" />
       
       {/* Animated Background Blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -174,23 +193,37 @@ export default function HomePage() {
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2.5">
               <div className="relative">
-                <div className="w-2.5 h-2.5 bg-brand-primary rounded-full animate-pulse" />
-                <div className="absolute inset-0 w-2.5 h-2.5 bg-brand-primary rounded-full animate-ping opacity-75" />
+                <div className={clsx(
+                  "w-2.5 h-2.5 rounded-full",
+                  isListening ? "bg-brand-primary animate-pulse" : "bg-gray-300"
+                )} />
+                {isListening && (
+                  <div className="absolute inset-0 w-2.5 h-2.5 bg-brand-primary rounded-full animate-ping opacity-75" />
+                )}
               </div>
-              <span className="text-[11px] font-black text-gray-500 uppercase tracking-widest">Live Monitoring</span>
+              <span className="text-[11px] font-black text-gray-500 uppercase tracking-widest">
+                {isListening ? 'AI Analyzing' : 'Monitoring Idle'}
+              </span>
             </div>
-            <div className="bg-brand-primary/10 text-brand-primary px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase">
-              MiaKalifa Active
+            <div className={clsx(
+              "px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase",
+              isCameraEnabled ? "bg-brand-primary/10 text-brand-primary" : "bg-gray-100 text-gray-400"
+            )}>
+              {isCameraEnabled ? 'MiaKalifa Active' : 'Sensor Paused'}
             </div>
           </div>
           
           <div className="flex items-center gap-5">
-            <div className="w-16 h-16 rounded-[24px] bg-brand-primary/10 flex items-center justify-center text-brand-primary shadow-inner">
-              <Activity size={32} className="animate-pulse" />
+            <div className={clsx(
+              "w-16 h-16 rounded-[24px] flex items-center justify-center shadow-inner transition-colors",
+              mood === 0 ? "bg-brand-primary/10 text-brand-primary" : 
+              mood === 1 ? "bg-amber-50 text-amber-500" : "bg-red-50 text-red-500"
+            )}>
+              <Activity size={32} className={isListening ? "animate-pulse" : ""} />
             </div>
             <div className="flex-1">
-              <h3 className="text-xl font-black text-gray-900 tracking-tight">Feeling Calm</h3>
-              <p className="text-[13px] text-gray-400 font-bold mt-0.5">Emotional signals are stable</p>
+              <h3 className="text-xl font-black text-gray-900 tracking-tight">{status.label}</h3>
+              <p className="text-[13px] text-gray-400 font-bold mt-0.5">{status.sub}</p>
             </div>
             <button 
               onClick={() => router.push('/mood')}
